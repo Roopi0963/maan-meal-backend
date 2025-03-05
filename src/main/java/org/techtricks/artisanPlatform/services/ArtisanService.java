@@ -19,4 +19,8 @@ public interface ArtisanService {
 
     public Artisan getByUsername(String username) throws ArtisanNotFoundException;
 
+    public Artisan getByEmail(String email) throws ArtisanNotFoundException;
+
+    boolean deleteByEmail(String email);
+
 }
