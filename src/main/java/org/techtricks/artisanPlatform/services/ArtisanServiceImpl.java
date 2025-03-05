@@ -44,4 +44,22 @@ public class ArtisanServiceImpl implements ArtisanService {
             throw new ArtisanNotFoundException("Artisan not found on this username "+username+" , please try another email");
         return artisanOptional.get();
     }
+
+    @Override
+    public Artisan getByEmail(String email) throws ArtisanNotFoundException {
+        Optional<Artisan> artisanOptional =  artisanRepository.findByEmail(email);
+        if(artisanOptional.isEmpty())
+            throw new ArtisanNotFoundException("Artisan not found on this Gmail "+email);
+        return artisanOptional.get();
+    }
+
+    @Override
+    public boolean deleteByEmail(String email) {
+        Optional<Artisan> optionalArtisan = artisanRepository.findByEmail(email);
+        if(optionalArtisan.isPresent()) {
+            artisanRepository.delete(optionalArtisan.get());
+            return true;
+        }
+        return false;
+    }
 }
