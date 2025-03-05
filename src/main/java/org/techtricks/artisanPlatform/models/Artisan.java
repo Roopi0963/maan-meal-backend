@@ -42,5 +42,8 @@ public class Artisan extends BaseUser {
 
     @Column(name = "rating")
     private float artisanRating;
+
+    @Column(name = "name")
+    private String name;
     
 }
