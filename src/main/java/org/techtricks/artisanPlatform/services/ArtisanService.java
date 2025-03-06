@@ -23,4 +23,7 @@ public interface ArtisanService {
 
     boolean deleteByEmail(String email);
 
+    public Artisan updateArtisan(Artisan artisan) throws ArtisanNotFoundException;
+
+
 }
