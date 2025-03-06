@@ -26,4 +26,6 @@ public interface UserService {
 
    boolean deleteUser(String email) throws UserNotFoundException;
 
+   public User updateUser(User user) throws UserNotFoundException;
+
 }
