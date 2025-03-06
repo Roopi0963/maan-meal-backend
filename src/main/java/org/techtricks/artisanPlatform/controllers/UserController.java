@@ -16,11 +16,10 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, JwtUtil jwtUtil) {
+
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/signup")
@@ -82,5 +81,11 @@ public class UserController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User user) throws UserNotFoundException {
+        User updateUser = userService.updateUser(user);
+        return ResponseEntity.ok(updateUser);
     }
 }
