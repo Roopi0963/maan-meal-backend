@@ -83,5 +83,15 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-
+    @Override
+    public User updateUser(User user) throws UserNotFoundException {
+        return userRepository.findByEmail(user.getEmail())
+                .map(existingUser ->{
+                    existingUser.setUsername(user.getUsername());
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                    existingUser.setEmail(user.getEmail());
+                    return userRepository.save(existingUser);
+                })
+                .orElseThrow(()-> new UserNotFoundException("User not found with email :" + user.getEmail()));
+    }
 }
