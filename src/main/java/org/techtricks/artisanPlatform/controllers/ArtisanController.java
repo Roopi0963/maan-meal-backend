@@ -61,4 +61,9 @@ public class ArtisanController {
         return artisanService.deleteByEmail(email);
 
     }
+    @PutMapping("/update")
+    public ResponseEntity<?> updateArtisan(@RequestBody Artisan artisan) throws ArtisanNotFoundException {
+        Artisan updateArtisan = artisanService.updateArtisan(artisan);
+        return ResponseEntity.ok(updateArtisan);
+    }
 }
