@@ -62,4 +62,20 @@ public class ArtisanServiceImpl implements ArtisanService {
         }
         return false;
     }
+
+    @Override
+    public Artisan updateArtisan(Artisan artisan) throws ArtisanNotFoundException {
+        return artisanRepository.findByEmail(artisan.getEmail())
+                .map(existingArtisan -> {
+                    existingArtisan.setName(artisan.getName());
+                    existingArtisan.setUserName(artisan.getUserName());
+                    existingArtisan.setEmail(artisan.getEmail());
+                    existingArtisan.setPassword(passwordEncoder.encode(artisan.getPassword()));
+                    existingArtisan.setSkill(artisan.getSkill());
+                    existingArtisan.setLocation(artisan.getLocation());
+                    existingArtisan.setArtisanRating(artisan.getArtisanRating());
+                    return artisanRepository.save(existingArtisan);
+                })
+                .orElseThrow(() -> new ArtisanNotFoundException("Artisan not found with email: " + artisan.getEmail()));
+    }
 }
