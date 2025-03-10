@@ -78,4 +78,13 @@ public class ArtisanServiceImpl implements ArtisanService {
                 })
                 .orElseThrow(() -> new ArtisanNotFoundException("Artisan not found with email: " + artisan.getEmail()));
     }
+
+    @Override
+    public  Optional<Artisan>  authenticate(String email, String password)  {
+        Optional<Artisan> optionalArtisan = artisanRepository.findByEmail(email);
+        if(optionalArtisan.isPresent() && passwordEncoder.matches(password, optionalArtisan.get().getPassword())) {
+            return optionalArtisan;
+        }
+        return Optional.empty();
+    }
 }
