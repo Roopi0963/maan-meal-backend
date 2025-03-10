@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.techtricks.artisanPlatform.config.JwtUtil;
 import org.techtricks.artisanPlatform.dto.LoginRequest;
+import org.techtricks.artisanPlatform.exceptions.ArtisanNotFoundException;
+import org.techtricks.artisanPlatform.models.Admin;
+import org.techtricks.artisanPlatform.models.Artisan;
 import org.techtricks.artisanPlatform.models.BaseUser;
 import org.techtricks.artisanPlatform.models.User;
+import org.techtricks.artisanPlatform.services.AdminService;
+import org.techtricks.artisanPlatform.services.ArtisanService;
 import org.techtricks.artisanPlatform.services.UserService;
 
 import java.util.HashMap;
@@ -21,24 +26,28 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
 
-//    @Autowired
-//    private AdminService adminService;
-//
-//    @Autowired
-//    private ArtisanService artisanService;
+    private final AdminService adminService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final ArtisanService artisanService;
+
+    private final JwtUtil jwtUtil;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthController(UserService userService, AdminService adminService, ArtisanService artisanService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.adminService = adminService;
+        this.artisanService = artisanService;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) throws ArtisanNotFoundException {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
@@ -56,16 +65,15 @@ public class AuthController {
         }).orElseGet(() -> ResponseEntity.status(401).body(Map.of("error", "Invalid username or password")));
     }
 
-    private Optional<? extends BaseUser> authenticateUser(String email, String password) {
+    private Optional<? extends BaseUser> authenticateUser(String email, String password) throws ArtisanNotFoundException {
         Optional<User> user = userService.authenticate(email, password);
         if (user.isPresent()) return user;
 
-//        Optional<Admin> admin = adminService.authenticate(email, password);
-//        if (admin.isPresent()) return admin;
-//
-//        Optional<Artisan> artisan = artisanService.authenticate(email, password);
-//        return artisan;
+        Optional<Admin> admin = adminService.authenticate(email, password);
+        if (admin.isPresent()) return admin;
 
+        Optional<Artisan> artisan = artisanService.authenticate(email, password);
+        if (artisan.isPresent()) return artisan;
         return Optional.empty();
     }
 }
