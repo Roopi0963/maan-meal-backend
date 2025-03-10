@@ -4,7 +4,6 @@ package org.techtricks.artisanPlatform.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.techtricks.artisanPlatform.config.JwtUtil;
 
 import org.techtricks.artisanPlatform.exceptions.UserAlreadyExistsException;
 import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
