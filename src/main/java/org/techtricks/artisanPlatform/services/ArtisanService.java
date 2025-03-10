@@ -7,6 +7,7 @@ import org.techtricks.artisanPlatform.models.Artisan;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface ArtisanService {
@@ -26,4 +27,5 @@ public interface ArtisanService {
     public Artisan updateArtisan(Artisan artisan) throws ArtisanNotFoundException;
 
 
+    public Optional<Artisan >authenticate(String email, String password) throws ArtisanNotFoundException;
 }
