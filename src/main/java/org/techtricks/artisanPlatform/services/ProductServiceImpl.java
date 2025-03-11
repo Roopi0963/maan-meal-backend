@@ -42,6 +42,15 @@ public class ProductServiceImpl implements ProductService {
         throw new ProductNotFoundException("(Product not found : "+id+"please try with another");
     }
 
+    @Override
+    public Product updateProduct(Long id, Product product, MultipartFile imageFile) throws IOException {
+        product.setImageName(imageFile.getOriginalFilename());
+        product.setImageType(imageFile.getContentType());
+        product.setImageData(imageFile.getBytes());
+
+        return productRepository.save(product);
+    }
+
 
     @Override
     public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
@@ -49,23 +58,9 @@ public class ProductServiceImpl implements ProductService {
             product.setImageName(imageFile.getOriginalFilename());
             product.setImageType(imageFile.getContentType());
             product.setImageData(imageFile.getBytes());
-
             return productRepository.save(product);
 
     }
-
-    @Override
-    public Product updateProduct(Long id, Product product ,MultipartFile imageFile) throws IOException, ProductNotFoundException {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isEmpty()){
-            throw new ProductNotFoundException("Product not found : "+id+"please try with another");
-        }
-        product.setImageName(imageFile.getOriginalFilename());
-        product.setImageType(imageFile.getContentType());
-        product.setImageData(imageFile.getBytes());
-        return productRepository.save(product);
-    }
-
 
     @Override
     public void deleteProduct(Long id) throws ProductNotFoundException {
