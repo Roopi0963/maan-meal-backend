@@ -14,9 +14,8 @@ import org.techtricks.artisanPlatform.services.ProductService;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("api/product")
+@RequestMapping("/api")
 public class ProductController {
 
     private final ProductService productService;
@@ -31,7 +30,7 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) throws ProductNotFoundException {
         Product product = productService.getProductById(id);
         if(product == null) {
@@ -40,43 +39,45 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<Product> addProduct(@RequestPart("product") String productJson,
-                                              @RequestPart("file") MultipartFile imageFile) throws IOException {
-        Product product = new ObjectMapper().readValue(productJson, Product.class);
-
-        return ResponseEntity.ok(productService.addProduct(product, imageFile));
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) {
+        try {
+            Product product1 = productService.addProduct(product, imageFile);
+            return new ResponseEntity<>(product1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) throws ProductNotFoundException {
-        Product product = productService.getProductById(id);
+    @GetMapping("/product/{productId}/image")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long productId ) throws ProductNotFoundException {
+        Product product = productService.getProductById(productId);
         byte[] imageFile  = product.getImageData();
 
         return ResponseEntity.ok().contentType(MediaType.valueOf(product.getImageType())).body(imageFile);
     }
 
 
+    @PutMapping("/product/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestPart Product product, @RequestPart MultipartFile imageFile) {
 
-    @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id ,@RequestPart Product product, @RequestPart MultipartFile file) throws ProductNotFoundException, IOException {
-        Product updateProduct = null;
-
-        try{
-         updateProduct = productService.updateProduct(id,product,file);
-        }catch (IOException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Product product1 = null;
+        try {
+            product1 = productService.updateProduct(id, product, imageFile);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
+        } catch (ProductNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        if(updateProduct != null) {
-            return new ResponseEntity<>("Product added successfully",HttpStatus.OK);
+        if (product1 != null) {
+            return new ResponseEntity<>("updated", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Product not found or failed to update",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
         }
-    }
 
-    @DeleteMapping("/deleteProduct/{id}")
+
+    }
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws ProductNotFoundException {
         Product product = productService.getProductById(id);
         if(product != null) {
@@ -86,7 +87,7 @@ public class ProductController {
         return new ResponseEntity<>("Product not found or failed to delete",HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/products/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) throws ProductNotFoundException {
         List<Product> product = productService.searchProduct(keyword);
         System.out.println("searching with keyword: " + keyword);
