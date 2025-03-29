@@ -37,7 +37,7 @@ public class ArtisanController {
     }
 
 
-    @PostMapping("/artisans")
+    @GetMapping("/artisans")
     public ResponseEntity<List<Artisan>> getAllArtisans() {
         List<Artisan> artisanList = artisanService.getAllArtisan();
         return ResponseEntity.ok(artisanList);
