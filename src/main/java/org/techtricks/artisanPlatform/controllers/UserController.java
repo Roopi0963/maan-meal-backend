@@ -1,9 +1,6 @@
 package org.techtricks.artisanPlatform.controllers;
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.techtricks.artisanPlatform.config.JwtUtil;
 import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
 import org.techtricks.artisanPlatform.models.User;
 import org.springframework.http.ResponseEntity;
