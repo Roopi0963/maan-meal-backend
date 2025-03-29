@@ -29,8 +29,10 @@ public class Product {
 
     private String brand;
 
+    private double discount;
+
     @Column(nullable = false)
-    private BigDecimal price;
+    private double price;
 
     private String category;
 
