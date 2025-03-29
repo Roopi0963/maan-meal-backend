@@ -1,7 +1,4 @@
 package org.techtricks.artisanPlatform.controllers;
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +24,7 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> productList = productService.getAllProducts();
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+        return ResponseEntity.ok(productList);
     }
 
     @GetMapping("/product/{id}")
