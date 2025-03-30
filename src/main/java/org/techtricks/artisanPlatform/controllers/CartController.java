@@ -20,7 +20,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/public/users/{userId}/cart/products/{productId}/quantity/{quantity}")
+    @PostMapping("/users/{userId}/cart/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long userId, @PathVariable Long productId, @PathVariable Integer quantity)
             throws ResourceNotFoundException, UserNotFoundException {
         CartDTO cartDTO = cartService.addProductToCart(userId, productId, quantity);
@@ -41,14 +41,14 @@ public class CartController {
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/public/carts/{cartId}/products/{productId}/quantity/{quantity}")
+    @PutMapping("/carts/{cartId}/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Long cartId, @PathVariable Long productId, @PathVariable Integer quantity) throws ResourceNotFoundException {
         CartDTO cartDTO = cartService.updateProductQuantityInCart(cartId, productId, quantity);
 
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/public/carts/{cartId}/product/{productId}")
+    @DeleteMapping("/carts/{cartId}/product/{productId}")
     public ResponseEntity<String> deleteProductFromCart(@PathVariable Long cartId, @PathVariable Long productId) throws ResourceNotFoundException {
         String status = cartService.deleteProductFromCart(cartId, productId);
 
