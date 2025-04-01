@@ -36,6 +36,6 @@ public class Order {
     private LocalDateTime orderDate;
 
     @OneToOne
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "id")
     private Address address;
 }
