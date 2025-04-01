@@ -1,5 +1,6 @@
 package org.techtricks.artisanPlatform;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,9 @@ public class ArtisanPlatformApplication {
 
 	//main function
 	public static void main(String[] args) {
+		Dotenv dotenv = Dotenv.load();
+		System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
+		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
 
 		SpringApplication.run(ArtisanPlatformApplication.class, args);
@@ -19,5 +23,4 @@ public class ArtisanPlatformApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
 }
