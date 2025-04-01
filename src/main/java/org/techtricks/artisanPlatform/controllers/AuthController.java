@@ -1,6 +1,4 @@
 package org.techtricks.artisanPlatform.controllers;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,10 +54,12 @@ public class AuthController {
         return authenticatedUser.map(user -> {
             String token = jwtUtil.generateToken(user.getEmail());
             String role = user.getRole().toString();
+            String userId = user.getId().toString();
 
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
             response.put("role", role);
+            response.put("userId", userId);
 
             return ResponseEntity.ok(response);
         }).orElseGet(() -> ResponseEntity.status(401).body(Map.of("error", "Invalid username or password")));
@@ -76,4 +76,5 @@ public class AuthController {
         if (artisan.isPresent()) return artisan;
         return Optional.empty();
     }
+    
 }
