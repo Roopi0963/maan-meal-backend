@@ -145,11 +145,11 @@ public class CartServiceImpl implements CartService {
 
 
 
-    @Override public CartDTO getCart(String emailId) throws ResourceNotFoundException {
-        Cart cart = cartRepository.findCartByEmail(emailId);
+    @Override public CartDTO getCart(Long id) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findCartByEmail(id);
 
         if (cart == null) {
-            throw new ResourceNotFoundException("Cart", "email", emailId);
+            throw new ResourceNotFoundException("Cart", "userId",id);
         }
 
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
