@@ -35,9 +35,9 @@ public class CartController {
         return new ResponseEntity<>(cartDTOs, HttpStatus.FOUND);
     }
 
-    @GetMapping("/public/users/{emailId}/cart")
-    public ResponseEntity<CartDTO> getCartByEmail(@PathVariable String emailId) throws ResourceNotFoundException {
-        CartDTO cartDTO = cartService.getCart(emailId);
+    @GetMapping("/users/{id}/cart")
+    public ResponseEntity<CartDTO> getCartByUserId(@PathVariable Long id) throws ResourceNotFoundException {
+        CartDTO cartDTO = cartService.getCart(id);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
