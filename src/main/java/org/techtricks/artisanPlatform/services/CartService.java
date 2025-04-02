@@ -20,7 +20,7 @@ public interface CartService {
 
     List<CartDTO> getAllCarts();
 
-    public CartDTO getCart(String emailId) throws ResourceNotFoundException;
+    public CartDTO getCart(Long id) throws ResourceNotFoundException;
 
     CartDTO updateProductQuantityInCart(Long cartId, Long productId, Integer quantity) throws ResourceNotFoundException;
 
