@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class OrderItemDTO {
 
-    private Long productId;
+    private Long Id;
     private String productName;
     private int quantity;
     private double price;
