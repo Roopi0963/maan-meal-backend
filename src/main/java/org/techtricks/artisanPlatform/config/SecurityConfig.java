@@ -31,7 +31,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/login**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/product/update/**").permitAll()  // ✅ Allow product updates
-                        .requestMatchers(HttpMethod.GET, "/api/product/products").permitAll()   // ✅ Allow product list retrieval
+                                .requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/product/products").permitAll()  // Allow fetching products
+
+                                // Restricted Endpoints (Role-Based)
+                                .requestMatchers(HttpMethod.PUT, "/api/product/update/**").permitAll() // Only Admins can update products
+                                .requestMatchers(HttpMethod.POST, "/api/product/create").permitAll()  // Only Admins can create products
+                                .requestMatchers("/api/admin/**").permitAll()    // Protect admin APIs
+                                .requestMatchers("/api/artisan/**").permitAll()  // Protect Artisan APIs
+                                .requestMatchers("/api/buyer/**").permitAll()    // Protect Buyer APIs
+// ✅ Allow product list retrieval
                         .anyRequest().permitAll()
                 );
         return http.build();
@@ -41,7 +51,7 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/api/**")
+                registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000") // ✅ React frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
