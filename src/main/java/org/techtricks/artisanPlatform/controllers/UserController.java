@@ -4,19 +4,24 @@ import org.springframework.web.bind.annotation.*;
 import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
 import org.techtricks.artisanPlatform.models.User;
 import org.springframework.http.ResponseEntity;
+import org.techtricks.artisanPlatform.repositories.UserRepository;
 import org.techtricks.artisanPlatform.services.UserService;
-import java.util.List;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/signup")
@@ -45,13 +50,17 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-
+    @GetMapping("/count")
+    public ResponseEntity<Long> getUserCount(){
+        long count = userRepository.count();
+        return ResponseEntity.ok(count);
+    }
     @GetMapping("/getByEmail")
     public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
-        try{
+        try {
             User user = userService.getUserByEmail(email);
             return ResponseEntity.ok(user);
-        }catch (UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
