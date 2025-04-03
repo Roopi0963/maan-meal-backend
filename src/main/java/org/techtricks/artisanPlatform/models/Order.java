@@ -1,11 +1,11 @@
 package org.techtricks.artisanPlatform.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,7 +35,13 @@ public class Order {
 
     private LocalDateTime orderDate;
 
-    @OneToOne
-    @JoinColumn(name = "id")
+    @PrePersist
+    public void setOrderDate() {
+        this.orderDate = LocalDateTime.now();
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER) // ✅ Corrected from OneToOne to ManyToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id") // ✅ Proper foreign key mapping
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
 }
