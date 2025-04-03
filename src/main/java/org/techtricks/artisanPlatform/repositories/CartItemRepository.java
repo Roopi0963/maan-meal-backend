@@ -3,9 +3,11 @@ package org.techtricks.artisanPlatform.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.techtricks.artisanPlatform.models.CartItem;
 import org.techtricks.artisanPlatform.models.Product;
 
+@Repository
 public interface CartItemRepository extends JpaRepository<CartItem , Long> {
     @Query("SELECT ci.product FROM CartItem ci WHERE ci.product.id = ?1")
     Product findProductById(Long productId);
