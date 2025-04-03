@@ -3,6 +3,7 @@ package org.techtricks.artisanPlatform.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.techtricks.artisanPlatform.dto.OrderDTO;
+import org.techtricks.artisanPlatform.dto.OrderSummaryDTO;
 import org.techtricks.artisanPlatform.exceptions.CartNotFoundException;
 import org.techtricks.artisanPlatform.exceptions.OrderNotFoundException;
 import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
@@ -36,6 +37,11 @@ public class OrderController {
     public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long orderId, @PathVariable OrderStatus status) throws OrderNotFoundException {
         orderService.updateOrderStatus(orderId, status );
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping({"/{orderId}/summary"})
+    public OrderSummaryDTO getOrderSummary(@PathVariable Long orderId) {
+        return orderService.getOrderSummary(orderId);
     }
 
 }
