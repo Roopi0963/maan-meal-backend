@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.techtricks.artisanPlatform.models.OrderItem;
 
 @Data
 @ToString
@@ -16,4 +17,11 @@ public class OrderItemDTO {
     private int quantity;
     private double price;
 
+
+    public OrderItemDTO(OrderItem orderItem) {
+        this.Id = orderItem.getId();
+        this.productName = orderItem.getProduct().getName(); // Assuming `OrderItem` has a `Product`
+        this.quantity = orderItem.getQuantity();
+        this.price = orderItem.getProductPrice();
+    }
 }
