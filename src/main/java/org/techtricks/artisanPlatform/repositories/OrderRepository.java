@@ -22,4 +22,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @EntityGraph(attributePaths = {"orderItems"})
     @Query("SELECT o From Order o JOIN FETCH o.orderItems where  o.user.id = :userId")
     List<Order> findByUserIdWithOrderItems(@Param("userId") Long userId);
+
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems")
+    List<Order> findAllWithOrderItems();
+
 }
