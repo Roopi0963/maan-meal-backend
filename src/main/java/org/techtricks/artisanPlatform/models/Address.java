@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
+@ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"}) // Prevent recursion
 public class Address {
 
@@ -25,4 +26,8 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY) // ✅ Lazy loading to optimize performance
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public String getFullAddress() {
+        return street + " " + city + " " + state + " " + zipCode + " " + country;
+    }
 }
