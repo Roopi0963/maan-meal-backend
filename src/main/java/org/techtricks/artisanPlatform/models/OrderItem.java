@@ -23,7 +23,7 @@ public class OrderItem {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id" , nullable = false)
+    @JoinColumn(name = "product_id" , nullable = false ,foreignKey = @ForeignKey(name = "fK_order_item_product"))
     private Product product;
 
     private int quantity;
