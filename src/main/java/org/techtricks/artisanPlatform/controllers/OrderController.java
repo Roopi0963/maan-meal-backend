@@ -44,4 +44,10 @@ public class OrderController {
         return orderService.getOrderSummary(orderId);
     }
 
+    @GetMapping("/allOrders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
 }
