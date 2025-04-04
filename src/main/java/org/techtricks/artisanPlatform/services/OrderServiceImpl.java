@@ -10,10 +10,13 @@ import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
 import org.techtricks.artisanPlatform.models.*;
 import org.techtricks.artisanPlatform.repositories.*;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -75,18 +78,32 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(order, OrderDTO.class);
     }
 
-    // ✅ Retrieve all orders by user with DTO conversion
+
+    @Transactional
     @Override
     public List<OrderDTO> getOrdersByUser(Long userId) {
         List<Order> orders = orderRepository.findByUserIdWithOrderItems(userId);
+
         return orders.stream().map(order -> {
             OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+
+            // Map order items manually
             orderDTO.setOrderItems(order.getOrderItems().stream()
                     .map(orderItem -> modelMapper.map(orderItem, OrderItemDTO.class))
                     .collect(Collectors.toList()));
+
+            // Safely set the address string
+            if (order.getAddress() != null) {
+                orderDTO.setAddress(order.getAddress().getFullAddress());
+            } else {
+                orderDTO.setAddress("N/A");
+            }
+
             return orderDTO;
         }).collect(Collectors.toList());
     }
+
+
 
     @Transactional
     @Override
@@ -130,4 +147,43 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(orderStatus);
         orderRepository.save(order);
     }
+
+    @Transactional
+    @Override
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAllWithOrderItems(); // Fetch all orders with items
+
+        return orders.stream().map(order -> {
+            OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+
+            // Map order items manually
+            orderDTO.setOrderItems(order.getOrderItems().stream()
+                    .map(orderItem -> modelMapper.map(orderItem, OrderItemDTO.class))
+                    .collect(Collectors.toList()));
+
+            // Safely set the address string
+            if (order.getAddress() != null) {
+                orderDTO.setAddress(order.getAddress().getFullAddress());
+            } else {
+                orderDTO.setAddress("N/A");
+            }
+
+            return orderDTO;
+        }).collect(Collectors.toList());
+    }
+
+
+
+    private OrderDTO convertToDTO(Order order) {
+        OrderDTO dto = new OrderDTO();
+        dto.setOrderId(order.getId());
+
+        dto.setOrderDate(order.getOrderDate());
+        dto.setStatus(order.getStatus().toString());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setAddress(order.getAddress().getFullAddress());
+
+        return dto;
+    }
+
 }

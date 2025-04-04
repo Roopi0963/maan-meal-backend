@@ -7,6 +7,7 @@ import org.techtricks.artisanPlatform.dto.OrderSummaryDTO;
 import org.techtricks.artisanPlatform.exceptions.CartNotFoundException;
 import org.techtricks.artisanPlatform.exceptions.OrderNotFoundException;
 import org.techtricks.artisanPlatform.exceptions.UserNotFoundException;
+import org.techtricks.artisanPlatform.models.Order;
 import org.techtricks.artisanPlatform.models.OrderStatus;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface OrderService  {
 
     public void updateOrderStatus(Long orderId, OrderStatus orderStatus) throws OrderNotFoundException;
 
+    public List<OrderDTO> getAllOrders();
 }
