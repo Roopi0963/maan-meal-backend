@@ -1,6 +1,7 @@
 package org.techtricks.artisanPlatform.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,12 +66,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) throws ProductNotFoundException {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isPresent()) {
-            productRepository.delete(optionalProduct.get());
-        }else {
-            throw new ProductNotFoundException("Product not found : "+id+"please try with another");
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            try {
+                productRepository.delete(product); // Try delete
+            } catch (DataIntegrityViolationException ex) {
+                // Foreign key constraint violated
+                product.setProductAvailable(false);
+                product.setStockQuantity(0);
+                productRepository.save(product); // Mark as out of stock
+                throw new ProductNotFoundException("Product is linked to existing orders. Marked as Out of Stock instead.");
+            }
+        } else {
+            throw new ProductNotFoundException("Product not found with id: " + id);
         }
     }
+
 
     @Override
     public List<Product> searchProduct(String keyword) throws ProductNotFoundException {
