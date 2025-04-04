@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.techtricks.artisanPlatform.exceptions.ProductNotFoundException;
 import org.techtricks.artisanPlatform.models.Product;
+import org.techtricks.artisanPlatform.repositories.ProductRepository;
 import org.techtricks.artisanPlatform.services.ProductService;
 
 import java.io.IOException;
@@ -16,9 +17,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductRepository productRepository) {
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @GetMapping("/products")
@@ -74,15 +77,17 @@ public class ProductController {
 
 
     }
+
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws ProductNotFoundException {
-        Product product = productService.getProductById(id);
-        if(product != null) {
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+        try {
             productService.deleteProduct(id);
-            return new ResponseEntity<>("Product deleted successfully",HttpStatus.OK);
+            return ResponseEntity.ok("Product deleted successfully");
+        } catch (ProductNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        return new ResponseEntity<>("Product not found or failed to delete",HttpStatus.NOT_FOUND);
     }
+
 
     @GetMapping("/products/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) throws ProductNotFoundException {
