@@ -26,6 +26,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("order")
     private List<OrderItem> orderItems;
 
     private Double totalAmount;
