@@ -1,11 +1,15 @@
 package org.techtricks.artisanPlatform.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "artisans")
@@ -45,5 +49,18 @@ public class Artisan extends BaseUser {
 
     @Column(name = "name")
     private String name;
-    
+
+    private double dailyWage = 500.0;
+
+    private int totalWorkDays = 0;
+
+    private double totalEarnings = 0.0;
+
+    @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private List<Attendance> attendanceRecords = new ArrayList<>();
+
+    public void calculateTotalEarnings() {
+        this.totalEarnings = this.totalWorkDays * this.dailyWage;
+    }
 }
