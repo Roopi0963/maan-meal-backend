@@ -21,38 +21,36 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/api/auth/login**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/product/update/**").permitAll()  // ✅ Allow product updates
-                                .requestMatchers("/api/user/**").permitAll()
-                                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/product/products").permitAll()  // Allow fetching products
+                        // ✅ Public APIs - no auth needed
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/product/**").permitAll()
+                        .requestMatchers("/api/artisan/**").permitAll()
+                        .requestMatchers("/api/attendance/**").permitAll()
+                        .requestMatchers("/api/buyer/**").permitAll()
+                        .requestMatchers("/api/admin/**").permitAll()
 
-                                // Restricted Endpoints (Role-Based)
-                                .requestMatchers(HttpMethod.PUT, "/api/product/update/**").permitAll() // Only Admins can update products
-                                .requestMatchers(HttpMethod.POST, "/api/product/create").permitAll()  // Only Admins can create products
-                                .requestMatchers("/api/admin/**").permitAll()    // Protect admin APIs
-                                .requestMatchers("/api/artisan/**").permitAll()  // Protect Artisan APIs
-                                .requestMatchers("/api/buyer/**").permitAll()    // Protect Buyer APIs
-// ✅ Allow product list retrieval
+                        // Allow GET requests to fetch data
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+
+                        // 🔐 Everything else should be authenticated (customize if needed)
                         .anyRequest().permitAll()
                 );
+
         return http.build();
     }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // ✅ React frontend
+                        .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
