@@ -4,6 +4,7 @@ package org.techtricks.artisanPlatform.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.techtricks.artisanPlatform.dto.ArtisanDTO;
 import org.techtricks.artisanPlatform.exceptions.ArtisanAlreadyExistsException;
 import org.techtricks.artisanPlatform.exceptions.ArtisanNotFoundException;
 import org.techtricks.artisanPlatform.models.Artisan;
@@ -38,9 +39,9 @@ public class ArtisanController {
 
 
     @GetMapping("/artisans")
-    public ResponseEntity<List<Artisan>> getAllArtisans() {
-        List<Artisan> artisanList = artisanService.getAllArtisan();
-        return ResponseEntity.ok(artisanList);
+    public ResponseEntity<List<ArtisanDTO>> getAllArtisans() {
+        List<ArtisanDTO> data = artisanService.getAllArtisan();
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 
     @GetMapping("/getByUserName")
