@@ -2,6 +2,7 @@ package org.techtricks.artisanPlatform.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.techtricks.artisanPlatform.dto.ArtisanDTO;
 import org.techtricks.artisanPlatform.exceptions.ArtisanAlreadyExistsException;
 import org.techtricks.artisanPlatform.exceptions.ArtisanNotFoundException;
 import org.techtricks.artisanPlatform.models.Artisan;
@@ -23,8 +24,9 @@ public class ArtisanServiceImpl implements ArtisanService {
     }
 
     @Override
-    public List<Artisan> getAllArtisan() {
-        return artisanRepository.findAll();
+    public List<ArtisanDTO> getAllArtisan() {
+        return artisanRepository.findAllNameAndSkill();
+
     }
 
     @Override
