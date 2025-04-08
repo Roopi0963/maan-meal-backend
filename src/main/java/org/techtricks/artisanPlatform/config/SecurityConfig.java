@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ✅ Public APIs - no auth needed
                         .requestMatchers("/api/auth/**").permitAll()
+
+
                         .requestMatchers("/api/product/**").permitAll()
                         .requestMatchers("/api/artisan/**").permitAll()
                         .requestMatchers("/api/attendance/**").permitAll()
