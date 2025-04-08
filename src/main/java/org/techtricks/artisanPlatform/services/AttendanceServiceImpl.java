@@ -50,6 +50,8 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendance.setPresent(present);
             attendance.setArtisan(artisan);
 
+
+
             if (present) {
                 artisan.setTotalWorkDays(artisan.getTotalWorkDays() + 1);
                 artisan.calculateTotalEarnings();
