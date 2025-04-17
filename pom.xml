@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.techtricks</groupId>
-	<artifactId>artisanPlatform</artifactId>
+	<artifactId>Maan-Meal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>artisanPlatform</name>
 	<description>it was a college group project</description>
@@ -52,6 +52,10 @@
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
 			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
 		<dependency>
